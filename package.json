@@ -1,0 +1,23 @@
+{
+  "name": "wechat-mp-api",
+  "version": "1.0.0",
+  "description": "Node.js API for Wechat MP",
+  "main": "index.js",
+  "repository": "git@github.com:xwang1024/wechat-mp-api.git",
+  "author": "XWang1024 <xwang1024@126.com>",
+  "license": "MIT",
+  "scripts": {
+    "test": "mocha -R spec -t 15000 -r thunk-mocha test/*.test.js",
+    "cov": "istanbul cover node_modules/mocha/bin/_mocha && codecov"
+  },
+  "dependencies": {
+    "debug": "^2.6.2",
+    "request": "^2.81.0"
+  },
+  "devDependencies": {
+    "codecov": "^1.0.1",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.2.0",
+    "thunk-mocha": "^1.0.8"
+  }
+}

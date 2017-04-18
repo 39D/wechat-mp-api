@@ -1,5 +1,3 @@
-'use strict';
-
 exports.testConfig = {
   appid: 'testAppid',
   secret: 'testSecret',

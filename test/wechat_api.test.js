@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const assert = require('assert');
 const WechatApi = require('../lib/wechat_api');
+const WechatError = require('../lib/wechat_error');
 const testConfig = require('./config').testConfig;
 
 describe('wechat_api.test.js', () => {
@@ -52,5 +53,80 @@ describe('wechat_api.test.js', () => {
       );
       assert(result);
     });
-  })
+  });
+
+  describe('getAccessToken', () => {
+    it('should be a function', () => {
+      let api = new WechatApi(testConfig);
+      assert(typeof(api.getAccessToken) === 'function');
+    });
+
+    it('should get access token', () => {
+      let api = new WechatApi(testConfig);
+      return api.getAccessToken().then((jsonData) => {
+        assert(typeof(jsonData.access_token) === 'string');
+        assert(typeof(jsonData.expires_in) === 'number');
+      }).catch((err) => {
+        console.log(err)
+      })
+    });
+
+    it('should throw wechat error', () => {
+      let customConfig = _.omit(testConfig, 'secret');
+      customConfig.secret = "foo";
+      let api = new WechatApi(customConfig);
+      return api.getAccessToken().then((jsonData) => {
+        assert(false);
+      }).catch((err) => {
+        assert(err instanceof WechatError);
+        assert(err.message.en.indexOf('secret') >= 0);
+      })
+    });
+  });
+
+  describe('_fetchJSON', () => {
+    it('should be a function', () => {
+      let api = new WechatApi(testConfig);
+      assert(typeof(api._fetchJSON) === 'function');
+    });
+
+    it('should throw text response error', () => {
+      let api = new WechatApi(testConfig);
+      return api._fetchJSON('https://api.weixin.qq.com/cgi-bin/token').then((jsonData) => {
+        assert(false);
+      }).catch((err) => {
+        assert(err instanceof WechatError);
+        assert(err.message.en && err.message.en.toLowerCase().indexOf('text response') >= 0);
+      })
+    });
+
+    it('should throw content type error', () => {
+      let api = new WechatApi(testConfig);
+      return api._fetchJSON('http://www.xmlfiles.com/examples/note.xml').then((jsonData) => {
+        assert(false);
+      }).catch((err) => {
+        assert(err instanceof WechatError);
+        assert(err.message.en && err.message.en.toLowerCase().indexOf('content-type') >= 0);
+      })
+    });
+
+    it('should throw http status error', () => {
+      let api = new WechatApi(testConfig);
+      return api._fetchJSON('http://404.github.io/').then((jsonData) => {
+        assert(false);
+      }).catch((err) => {
+        assert(err instanceof Error);
+        assert(err.message.indexOf('404') >= 0);
+      })
+    });
+
+    it('should throw fetch error', () => {
+      let api = new WechatApi(testConfig);
+      return api._fetchJSON('http://').then((jsonData) => {
+        assert(false);
+      }).catch((err) => {
+        assert(err instanceof Error);
+      })
+    });
+  });
 });

@@ -13,6 +13,8 @@
   "dependencies": {
     "debug": "^2.6.2",
     "lodash": "^4.17.4",
+    "node-fetch": "^1.6.3",
+    "query-string": "^4.3.3",
     "request": "^2.81.0"
   },
   "devDependencies": {

@@ -1,7 +1,7 @@
 exports.testConfig = {
-  appid: 'testAppid',
-  secret: 'testSecret',
-  AESKey: 'testAES',
-  token: 'helloworld',
-  timeoutMillis: 1000
+  appid: process.env.appid || 'testAppid',
+  secret: process.env.secret || 'testSecret',
+  AESKey: process.env.AESKey || 'testAES',
+  token: process.env.token || 'helloworld',
+  timeoutMillis: 3000
 }
